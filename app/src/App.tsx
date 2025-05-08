@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useFetch } from "./useFetch";
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface Post {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
 }
 
-export default App
+export const App = () => {
+  const { data, isLoading, error, refetch } = useFetch<Post[]>(
+    "https://jsonplaceholder.typicode.com/posts"
+  );
+
+  return (
+    <div>
+      <div>
+        <button
+          onClick={() =>
+            refetch({
+              params: {
+                _limit: 3,
+              },
+            })
+          }
+        >
+          Перезапросить
+        </button>
+      </div>
+      {isLoading && "Загрузка..."}
+      {error && "Произошла ошибка"}
+      {data &&
+        !isLoading &&
+        data.map((item) => <div key={item.id}>{item.title}</div>)}
+    </div>
+  );
+};
