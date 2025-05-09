@@ -1,5 +1,11 @@
-import "./App.css";
+import { useViewportSize } from "./useViewportSize";
 
-export const App = () => {
-  return <></>;
-};
+export function App() {
+  const { height, width } = useViewportSize();
+
+  return (
+    <>
+      Width: {width}, height: {height}
+    </>
+  );
+}
