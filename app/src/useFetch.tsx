@@ -13,7 +13,6 @@ type FetchRes<T> = {
 
 export function useFetch<T>(fetchUrl: string): FetchRes<T> {
   const [url, setUrl] = useState(fetchUrl);
-  const [newUrl, setNewUrl] = useState(url);
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,7 +20,7 @@ export function useFetch<T>(fetchUrl: string): FetchRes<T> {
   const fetchData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(newUrl);
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -35,21 +34,19 @@ export function useFetch<T>(fetchUrl: string): FetchRes<T> {
       setData(null);
     } finally {
       setIsLoading(false);
-      setUrl(url);
     }
-  }, [url, newUrl]);
+  }, [url]);
 
   useEffect(() => {
     fetchData();
   }, [fetchData]);
 
-  const refetch = useCallback(
-    (params: Params) => {
-      const newUrl = url + `?_limit=${params.params?._limit}`;
-      setNewUrl(newUrl);
-    },
-    [url]
-  );
+  const refetch = (params: Params) => {
+    const newUrl = params
+      ? `${fetchUrl}?_limit=${params.params?._limit}`
+      : fetchUrl;
+    setUrl(newUrl);
+  };
 
   return { data, isLoading, error, refetch };
 }
