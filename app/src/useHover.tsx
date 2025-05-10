@@ -10,12 +10,14 @@ export const useHover = <T extends HTMLElement>(): UseHoverReturn<T> => {
   const [hovered, setHovered] = useState(false);
   const ref = useRef<T>(null);
 
+  console.log(hovered);
+
+  const handleMouseEnter = () => setHovered(true);
+  const handleMouseLeave = () => setHovered(false);
+
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-
-    const handleMouseEnter = () => setHovered(true);
-    const handleMouseLeave = () => setHovered(false);
 
     element.addEventListener("mouseenter", handleMouseEnter);
     element.addEventListener("mouseleave", handleMouseLeave);
