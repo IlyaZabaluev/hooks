@@ -1,5 +1,7 @@
-import "./App.css";
+import { useToggle } from "./useToggle";
 
-export const App = () => {
-  return <></>;
-};
+export function App() {
+  const [value, toggle] = useToggle(["blue", "orange", "cyan", "teal"]);
+
+  return <button onClick={() => toggle()}>{value}</button>;
+}
